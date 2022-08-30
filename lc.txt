@@ -1,0 +1,268 @@
+https://leetcode.com/problems/number-of-matching-subsequences/
+
+
+792. Number of Matching Subsequences
+
+class Solution {
+public:
+    void findSubseq(string s, set<string>& st , string &output ,int i){
+        //base case
+        // if pointer gets out of string
+        if(i >= s.size()){
+            st.insert(output);  // insert the string while returning i.e at leaf nodes
+            return;
+        }
+        
+        //include
+        output.push_back(s[i]);  // insert the character in output
+        findSubseq(s,st,output,i+1);
+        
+        //exclude
+        output.pop_back();  //backtracking to remove the previously inserted element to attain previous state
+        findSubseq(s,st,output,i+1);
+        
+    }
+    
+    int numMatchingSubseq(string s, vector<string>& words) {
+        // set to store all possible subsequences/subsets
+        set<string> st;  // using set data structure will not store duplicate values
+        string output = "";  // to store individual subsets at each recursion call
+        
+        int i = 0;  // starting index.
+        findSubseq(s,st,output,i);
+        
+        int count = 0;  
+        for( auto i: words){
+            if( st.find(i) != st.end() ){  // if we find the same subsequence
+                count++;
+            }
+        }
+        
+        return count;
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+https://leetcode.com/problems/letter-case-permutation/
+
+784. Letter Case Permutation
+
+
+class Solution {
+public:
+       
+    void solveRec(vector<string> &ans, string s, string output, int i){
+        //base case
+        if( i>= s.size()){
+            ans.push_back(output);
+            return;
+        }
+        
+        // if it is a digit we dont need to backtrack so handle it here
+        if( s[i] >= '1' && s[i] <= '9'){
+            output.push_back((s[i]) );
+            solveRec(ans, s, output, i+1);
+        }
+        
+        else{
+            // upper  case
+            output.push_back( toupper(s[i]) ); // push uppercase case
+            solveRec(ans, s, output, i+1);
+
+            // lower case
+            output.pop_back();  // backtrack to remove uppercase letter
+            output.push_back(tolower(s[i]));  // push lower case
+            solveRec(ans, s, output, i+1);
+        }
+    }
+    
+    vector<string> letterCasePermutation(string s) {
+        vector<string> ans; // to store all permutation
+        
+        string output = ""; // to store each string at each recusive call
+        int i = 0;
+        
+        solveRec(ans, s, output, i);
+        
+        return ans;
+    }
+};
+
+
+
+https://leetcode.com/problems/generate-parentheses/
+
+22. Generate Parentheses
+
+
+
+class Solution {
+public:
+    void solve(vector<string> &ans,string output, int open, int closed ){
+        //base case
+        if( open == 0 && closed ==0 ){ // we reached leaf node as both open and closed are 0
+            ans.push_back(output);  // insert the parenthesis in ans;
+            return;
+        }
+        
+        if( open != 0 ){  // we will insert the '(' everytime till no. of open parenthesis is 0
+            string op1 = output;  // new string initialize as we chose the '(' so no need to backtrack to attain previous state for other choice 
+            op1.push_back('(');   // insert into output
+            solve(ans,op1,open-1,closed);  // recursive call with open-1 as we used one bracket
+            
+        }
+        
+        if( open < closed){  // we can use ')' only when the no. of closed bracket is more (can be seen from recursive tree)
+            string op2 = output;   // new string initialize as we chose the ')' so no need to backtrack to attain previous state for other choice 
+            op2.push_back(')');
+            solve(ans,op2,open,closed-1);  // recursive call with closed-1 as we used one bracket
+        }
+        
+        return;
+    }
+    
+    
+    vector<string> generateParenthesis(int n) {
+        vector<string> ans;
+        int open = n;  // n is pair of parenthesis, no .open brackets  = n
+        int closed = n;  //  and closed brackets  = n
+        
+        string output = "";
+        
+        solve(ans,output,open,closed);
+        
+        return ans;
+    }
+};
+
+
+
+
+https://leetcode.com/problems/find-all-anagrams-in-a-string/
+
+438. Find All Anagrams in a String
+
+
+class Solution {
+public:
+    vector<int> findAnagrams(string s, string p) {
+        vector<int> ans;
+        
+        unordered_map<char,int> mp; // to store count of each element of pattern
+        for(auto i : p){
+            mp[i]++;
+        }
+        
+        int count = mp.size(); // to store different elements of map(pattern)
+	                            // so we dont have to traverse map again & again
+        
+        int i=0 , j=0 ;
+        int k = p.size(); // size of sliding window
+        
+        while( j < s.size() ){
+            //calculations
+            if( mp.find(s[j]) != mp.end() ){
+                mp[s[j]]--;
+                
+                if( mp[s[j]] == 0 )  // matlab ki mp mei koi element ka count 0 ho gya hai
+                    count--;    // to ab total element kam kardo
+            }
+            
+            //if window size not reached
+            if( j-i+1 < k){
+                j++;
+            }
+            
+            // // window length achived, find ans and slide window
+            else if( j-i+1 == k){
+                // ans nikalo
+                if( count == 0 )
+                    ans.push_back(i);
+                
+                // i ki calc nikalo ( reverse the above op)
+                // ie construct the map again (dubara pattern ke elements badhao map mei)
+                if( mp.find( s[i] ) != mp.end() ){
+                    mp[s[i]]++;
+                    
+                    if( mp[s[i]] == 1 ){
+                        count++;
+                    }
+                }
+                
+                //slide the window
+                i++;
+                j++;
+            }
+        }
+        
+        return ans;
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+https://leetcode.com/problems/sliding-window-maximum/
+
+239. Sliding Window Maximum
+
+
+class Solution {
+public:
+    vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+        vector<int> ans;  // to store max of each window
+        
+        deque<int> store;  // to store the max elements in each window
+        
+        int i=0 , j =0 ;
+        
+        while(j < nums.size() ){
+            //calculations
+            while( store.size()>0 && store.back() < nums[j] ){
+                store.pop_back();  // agar current element se pehle koi chota element hai toh woh kisi kaam ka nhi hoga isliye unhe nikal do  
+            }                      //                
+            
+            store.push_back(nums[j]);   
+            // par badme koi chota element aata hai toh woh kaam ka hai, kyuki next window mei possible max element ho sakta hai
+            
+            // not reached the window size
+            if( j-i+1 < k){
+                j++;
+            }
+            
+            // reached the window size now find ans and slide window
+            else if( j-i+1 == k ){
+                ans.push_back( store.front() ); // at each window font will always be max
+                
+                // i ki calculations nikalo
+                if( nums[i] == store.front() ){
+                    store.pop_front(); // agar i ka element hi max tha toh usko nikal do
+                }                      // othewise humne usko dala hi nhi hoga
+        
+                //slide the window
+                i++;
+                j++;
+            }
+            
+        }
+        return ans;
+    }
+};
