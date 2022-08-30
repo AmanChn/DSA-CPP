@@ -1,0 +1,84 @@
+// merge sort
+
+#include <bits/stdc++.h>
+using namespace std;
+
+void merge(int arr[], int s, int mid, int e)
+    {
+         
+         int len1 = mid - s + 1; // length of 1st part
+         int len2 = e - mid;  // length of 2nd part
+         
+         // two arrays to store the first and second half
+         int first[len1]; 
+         int second[len2];
+         
+         // insert first half
+         int mainArrayIndex = s;
+         for( int i=0 ; i<len1 ; i++ ){
+             first[i] = arr[mainArrayIndex++];
+         }
+         
+         // insert second half
+         mainArrayIndex = mid+1;  // second half will start from index mid+1
+         for( int i=0 ; i<len2 ; i++ ){
+             second[i] = arr[mainArrayIndex++];
+         }
+         
+         // merge two sorted array
+         int index1 = 0;
+         int index2 = 0;
+         mainArrayIndex = s;
+         
+         while( index1 < len1 && index2 < len2 ){
+             if( first[index1] < second[index2] ){
+                 arr[mainArrayIndex] = first[index1];
+                 mainArrayIndex++;
+                 index1++;
+             }
+             else{
+                 arr[mainArrayIndex++] = second[index2++];
+             }
+         }
+         
+         // if first half still has remaining elements
+         while( index1 < len1 ){
+             arr[mainArrayIndex++] = first[index1++];
+         }
+         
+         // if second half still has remaining elements
+         while( index2 < len2 ){
+             arr[mainArrayIndex++] = second[index2++];
+         }
+         
+    }
+
+    void mergeSort(int arr[], int s, int e)
+    {
+        if( s >= e )
+            return;
+            
+        int mid = s + (e-s)/2;
+            
+        // left part sort
+        mergeSort(arr,s,mid);
+        
+        // right part sort
+        mergeSort(arr,mid+1,e);
+        
+        // merge
+        merge(arr,s,mid,e);
+    }
+
+int main()
+{
+    int arr[12] = {6,9,7,0,4,3,5,7,9,0,5,4};
+    
+    mergeSort(arr,0,11);
+    
+    for( auto i : arr ){
+        cout<<i<<" ";
+    }
+
+    return 0;
+}

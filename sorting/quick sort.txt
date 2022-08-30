@@ -1,0 +1,73 @@
+// quick sort
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int partition(int arr[], int s, int e)
+    {
+         int pivot = arr[s];
+         
+         // count no. of elements smaller than pivot to place the pivot at right position
+         int count = 0;
+         for( int i=s+1 ; i<=e ; i++ ){
+             if( arr[i] <= pivot )
+                count++;
+         }
+         
+         int pivotIndex = s + count; // placing pivot at right Index
+         swap( arr[pivotIndex] , arr[s] ); // we took startiung element at pivot
+         
+         // make all elements to the left of pivot smaller and right of pivot greater
+         
+         int i =s , j = e;
+         
+         while( i < pivotIndex && j > pivotIndex ){
+             
+             while( arr[i] < pivot ){
+                 i++;
+             }
+             
+             while( arr[j] > pivot ){
+                 j--;
+             }
+             
+             if( i < pivotIndex && j > pivotIndex ){
+                 swap( arr[i] , arr[j] );
+                 i++;
+                 j--;
+             }
+             
+         }
+         
+         return pivotIndex;
+    }
+
+    void quickSort(int arr[], int s, int e)
+    {
+        //base case
+        if( s>=e )
+            return;
+            
+        //partition karo
+        int p = partition(arr,s,e);
+        
+        //left part sort karo
+        quickSort(arr,s,p-1);
+        
+        // right part sort karo
+        quickSort(arr,p+1,e);
+        
+    }
+
+int main()
+{
+    int arr[7] = {6,9,7,0,4,3,5};
+    
+    quickSort(arr,0,6);
+    
+    for( auto i : arr ){
+        cout<<i<<" ";
+    }
+
+    return 0;
+}

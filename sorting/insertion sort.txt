@@ -1,0 +1,36 @@
+
+#include <bits/stdc++.h>
+using namespace std;
+
+void insertion_sort(int *arr , int n){
+    
+    int key = 0 , j=0;
+    for( int i=1 ; i<n ; i++){
+        
+        key = arr[i];
+        j=i-1;
+        
+        // Move elements of arr[0..i-1], that are greater than key, 
+        //to one position ahead of their current position
+        while(key < arr[j] && j>=0){
+            arr[j+1] = arr[j]; // move the elements one step ahead
+            j--;
+        }
+        
+        arr[j+1] = key;
+    }
+    
+}
+
+int main()
+{
+    int arr[5] = {6,9,7,0,4};
+    
+    insertion_sort(arr,5);
+    
+    for( auto i : arr ){
+        cout<<i<<" ";
+    }
+
+    return 0;
+}
