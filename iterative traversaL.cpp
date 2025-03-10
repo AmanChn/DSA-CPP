@@ -1,4 +1,4 @@
-iterative preorder traversal
+// iterative preorder traversal
 
 void iterative(Node* root , vector<int> &pre_store){
         // iterative traversal using stack
@@ -26,7 +26,7 @@ void iterative(Node* root , vector<int> &pre_store){
 
 
 
-Iterative Inorder Traversal ( to do without stack, use morris traversal )
+// Iterative Inorder Traversal ( to do without stack, use morris traversal )
 
 vector<int> inorderTraversal(TreeNode* root) {
         vector<int> inorder;
@@ -54,7 +54,7 @@ vector<int> inorderTraversal(TreeNode* root) {
  }
 
 
-Iterative Postorder Traversal
+// Iterative Postorder Traversal
 
 void iteration(Node* root, vector<int> &ans){
         stack<Node*> s1;
